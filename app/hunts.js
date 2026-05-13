@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -26,10 +26,12 @@ const C = {
   text: "#EDE8D8",
   textMuted: "#8A8470",
   textFaint: "#504C3D",
-  accent: "#5C8A5E", // forest green accent
+  accent: "#5C8A5E",
 };
 
-// ── Tiny icon components (no dependency) ─────────────────────────────────────
+const ITEMS_PER_PAGE = 10;
+
+// ── Icons ─────────────────────────────────────────────────────────────────────
 const CompassIcon = ({ size = 18, color = C.gold }) => (
   <View
     style={{
@@ -144,6 +146,8 @@ const UserIcon = ({ size = 14, color = C.text }) => (
     />
   </View>
 );
+
+// ── Pagination ────────────────────────────────────────────────────────────────
 function Pagination({ page, totalPages, onPrev, onNext }) {
   if (totalPages <= 1) return null;
 
@@ -247,7 +251,7 @@ const pStyles = StyleSheet.create({
   ellipsis: { fontSize: 13, color: C.textFaint, paddingHorizontal: 2 },
 });
 
-// ── Animated Hunt Card ────────────────────────────────────────────────────────
+// ── Hunt Card ─────────────────────────────────────────────────────────────────
 function HuntCard({ item, onPress, index }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(24)).current;
@@ -278,7 +282,6 @@ function HuntCard({ item, onPress, index }) {
   const handlePressOut = () =>
     Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start();
 
-  // Pseudo-random "difficulty" dots from id
   const difficulty = (item.id % 3) + 1;
 
   return (
@@ -295,11 +298,8 @@ function HuntCard({ item, onPress, index }) {
         onPressOut={handlePressOut}
       >
         <View style={styles.card}>
-          {/* Gold left accent bar */}
           <View style={styles.cardAccentBar} />
-
           <View style={styles.cardInner}>
-            {/* Header row */}
             <View style={styles.cardHeader}>
               <View style={styles.cardHeaderLeft}>
                 <View style={styles.huntNumberBadge}>
@@ -308,7 +308,6 @@ function HuntCard({ item, onPress, index }) {
                   </Text>
                 </View>
               </View>
-              {/* Difficulty dots */}
               <View style={styles.difficultyRow}>
                 {[1, 2, 3].map((d) => (
                   <View
@@ -321,22 +320,14 @@ function HuntCard({ item, onPress, index }) {
                 ))}
               </View>
             </View>
-
-            {/* Title */}
             <Text style={styles.cardTitle} numberOfLines={2}>
               {item.title}
             </Text>
-
-            {/* Separator line */}
             <View style={styles.cardDivider} />
-
-            {/* Description */}
             <Text style={styles.cardDesc} numberOfLines={3}>
               {item.description ||
                 "Aucune description disponible pour cette chasse."}
             </Text>
-
-            {/* Footer */}
             <View style={styles.cardFooter}>
               <View style={styles.cardFooterLeft}>
                 <MapPinIcon size={11} color={C.textMuted} />
@@ -359,10 +350,10 @@ export default function HuntsScreen() {
   const [hunts, setHunts] = useState([]);
   const [mode, setMode] = useState("all");
   const [loading, setLoading] = useState(false);
-  const ITEMS_PER_PAGE = 10;
   const [page, setPage] = useState(1);
 
   const headerFade = useRef(new Animated.Value(0)).current;
+
   const totalPages = Math.max(1, Math.ceil(hunts.length / ITEMS_PER_PAGE));
   const pageHunts = hunts.slice(
     (page - 1) * ITEMS_PER_PAGE,
@@ -435,11 +426,22 @@ export default function HuntsScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: "Lootopia - Chasses",
+          headerStyle: {
+            backgroundColor: C.surface,
+          },
+          headerTintColor: C.text,
+        }}
+      />
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+
       {/* ── HEADER ── */}
       <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        {/* Decorative top line */}
         <View style={styles.headerTopLine} />
+
         <View style={styles.headerContent}>
           <View style={styles.headerLeft}>
             <CompassIcon size={22} color={C.gold} />
@@ -448,8 +450,6 @@ export default function HuntsScreen() {
               <Text style={styles.headerTitle}>Chasses</Text>
             </View>
           </View>
-
-          {/* Nav buttons */}
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.iconBtn}
@@ -465,6 +465,7 @@ export default function HuntsScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
         {/* ── FILTER TABS ── */}
         <View style={styles.tabRow}>
           {[
@@ -488,25 +489,25 @@ export default function HuntsScreen() {
             </TouchableOpacity>
           ))}
         </View>
-        {/* Count badge */}
-        // Count badge — ajoute "page X / Y" à droite
+
+        {/* ── COUNT + PAGE INFO ── */}
         {hunts.length > 0 && (
           <View style={styles.countBadge}>
             <Text style={styles.countText}>
               {hunts.length} chasse{hunts.length > 1 ? "s" : ""}
             </Text>
             {totalPages > 1 && (
-              <Text style={[styles.countText, { color: C.textFaint }]}>
+              <Text style={styles.countText}>
                 page {page} / {totalPages}
               </Text>
             )}
           </View>
         )}
       </Animated.View>
+
       {/* ── LIST ── */}
-      // FlatList
       <FlatList
-        data={pageHunts} // ← était `hunts`
+        data={pageHunts}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         ListEmptyComponent={ListEmpty}
@@ -514,7 +515,6 @@ export default function HuntsScreen() {
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         ListFooterComponent={
-          // ← nouveau
           <Pagination
             page={page}
             totalPages={totalPages}
@@ -529,30 +529,15 @@ export default function HuntsScreen() {
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: C.bg,
-  },
-
-  countBadge: {
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    flexDirection: "row", // ← ajoute
-    justifyContent: "space-between", // ← ajoute
-  },
+  safe: { flex: 1, backgroundColor: C.bg },
 
   // Header
   header: {
     backgroundColor: C.surface,
     borderBottomWidth: 1,
     borderBottomColor: C.border,
-    paddingBottom: 0,
   },
-  headerTopLine: {
-    height: 2,
-    backgroundColor: C.gold,
-    opacity: 0.6,
-  },
+  headerTopLine: { height: 2, backgroundColor: C.gold, opacity: 0.6 },
   headerContent: {
     flexDirection: "row",
     alignItems: "center",
@@ -561,10 +546,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 12,
   },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  headerLeft: { flexDirection: "row", alignItems: "center" },
   headerEyebrow: {
     fontFamily: "monospace",
     fontSize: 9,
@@ -579,10 +561,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginTop: -2,
   },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  headerActions: { flexDirection: "row", alignItems: "center" },
   iconBtn: {
     width: 36,
     height: 36,
@@ -602,11 +581,7 @@ const styles = StyleSheet.create({
     borderTopColor: C.border,
     marginTop: 4,
   },
-  tab: {
-    marginRight: 24,
-    paddingVertical: 12,
-    position: "relative",
-  },
+  tab: { marginRight: 24, paddingVertical: 12, position: "relative" },
   tabActive: {},
   tabText: {
     fontSize: 13,
@@ -614,9 +589,7 @@ const styles = StyleSheet.create({
     color: C.textMuted,
     letterSpacing: 0.3,
   },
-  tabTextActive: {
-    color: C.goldLight,
-  },
+  tabTextActive: { color: C.goldLight },
   tabUnderline: {
     position: "absolute",
     bottom: 0,
@@ -627,10 +600,13 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
 
-  // Count
+  // Count — une seule déclaration, avec flexDirection row pour aligner les deux textes
   countBadge: {
     paddingHorizontal: 20,
+    paddingTop: 8, // espace entre les tabs et le compteur
     paddingBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   countText: {
     fontSize: 11,
@@ -641,11 +617,7 @@ const styles = StyleSheet.create({
   },
 
   // List
-  listContent: {
-    padding: 16,
-    paddingTop: 12,
-    flexGrow: 1,
-  },
+  listContent: { padding: 16, paddingTop: 12, flexGrow: 1 },
 
   // Card
   card: {
@@ -656,25 +628,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     overflow: "hidden",
   },
-  cardAccentBar: {
-    width: 3,
-    backgroundColor: C.gold,
-    opacity: 0.7,
-  },
-  cardInner: {
-    flex: 1,
-    padding: 14,
-  },
+  cardAccentBar: { width: 3, backgroundColor: C.gold, opacity: 0.7 },
+  cardInner: { flex: 1, padding: 14 },
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 8,
   },
-  cardHeaderLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  cardHeaderLeft: { flexDirection: "row", alignItems: "center" },
   huntNumberBadge: {
     backgroundColor: C.surfaceAlt,
     borderRadius: 4,
@@ -689,16 +651,8 @@ const styles = StyleSheet.create({
     color: C.goldDim,
     letterSpacing: 1,
   },
-  difficultyRow: {
-    flexDirection: "row",
-    gap: 4,
-  },
-  difficultyDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-  },
-
+  difficultyRow: { flexDirection: "row", gap: 4 },
+  difficultyDot: { width: 7, height: 7, borderRadius: 4 },
   cardTitle: {
     fontSize: 17,
     fontWeight: "700",
@@ -707,11 +661,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
     marginBottom: 8,
   },
-  cardDivider: {
-    height: 1,
-    backgroundColor: C.border,
-    marginBottom: 8,
-  },
+  cardDivider: { height: 1, backgroundColor: C.border, marginBottom: 8 },
   cardDesc: {
     fontSize: 13,
     color: C.textMuted,
@@ -723,10 +673,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  cardFooterLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  cardFooterLeft: { flexDirection: "row", alignItems: "center" },
   cardMeta: {
     fontSize: 11,
     color: C.textFaint,
@@ -744,12 +691,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.border,
   },
-  chevron: {
-    fontSize: 16,
-    color: C.gold,
-    lineHeight: 20,
-    marginLeft: 1,
-  },
+  chevron: { fontSize: 16, color: C.gold, lineHeight: 20, marginLeft: 1 },
 
   // Empty
   emptyContainer: {
