@@ -1,18 +1,25 @@
-import React, { useEffect, useState, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
   Alert,
   Animated,
-  StatusBar,
   SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+
+const GemIcon = ({ size = 16, color = C.gold }) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ width: 0, height: 0, borderLeftWidth: size * 0.4, borderRightWidth: size * 0.4, borderBottomWidth: size * 0.35, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: color, position: 'absolute', top: size * 0.05 }} />
+    <View style={{ width: 0, height: 0, borderLeftWidth: size * 0.4, borderRightWidth: size * 0.4, borderTopWidth: size * 0.5, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderTopColor: color, position: 'absolute', bottom: size * 0.05, opacity: 0.75 }} />
+  </View>
+);
 
 // ── Palette (même que HuntsScreen) ───────────────────────────────────────────
 const C = {
@@ -27,6 +34,37 @@ const C = {
   textMuted: '#8A8470',
   textFaint: '#504C3D',
   accent: '#5C8A5E',
+};
+
+
+// 
+const artifactsBtn = {
+  marginHorizontal: 16,
+  marginBottom: 24,
+  backgroundColor: C.surface,
+  borderRadius: 10,
+  borderWidth: 1,
+  borderColor: C.border,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: 16,
+};
+const artifactsBtnLeft = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 10,
+};
+const artifactsBtnText = {
+  fontSize: 15,
+  fontWeight: '700',
+  color: C.text,
+  letterSpacing: 0.2,
+};
+const artifactsBtnChevron = {
+  fontSize: 20,
+  color: C.gold,
+  fontWeight: '600',
 };
 
 // ── Mini icônes ───────────────────────────────────────────────────────────────
@@ -254,6 +292,17 @@ export default function ProfileScreen() {
                 value={user.completedHuntsCount}
               />
             </View>
+            <TouchableOpacity
+              style={artifactsBtn}
+              onPress={() => router.push('/artifacts')}
+              activeOpacity={0.8}
+            >
+              <View style={artifactsBtnLeft}>
+                <GemIcon size={15} color={C.gold} />
+                <Text style={artifactsBtnText}>Mes artefacts</Text>
+              </View>
+              <Text style={artifactsBtnChevron}>›</Text>
+            </TouchableOpacity>
 
             {/* ── BADGES ── */}
             <View style={styles.section}>

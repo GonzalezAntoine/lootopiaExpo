@@ -43,6 +43,7 @@ export default function RootLayout() {
 
         {/* [id].js — header natif activé, le titre vient de Stack.Screen dans [id].js */}
         <Stack.Screen name="[id]" options={{ title: "Chasse" }} />
+        <Stack.Screen name="artifacts" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
