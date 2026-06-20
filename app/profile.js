@@ -36,37 +36,6 @@ const C = {
   accent: '#5C8A5E',
 };
 
-
-// 
-const artifactsBtn = {
-  marginHorizontal: 16,
-  marginBottom: 24,
-  backgroundColor: C.surface,
-  borderRadius: 10,
-  borderWidth: 1,
-  borderColor: C.border,
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: 16,
-};
-const artifactsBtnLeft = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 10,
-};
-const artifactsBtnText = {
-  fontSize: 15,
-  fontWeight: '700',
-  color: C.text,
-  letterSpacing: 0.2,
-};
-const artifactsBtnChevron = {
-  fontSize: 20,
-  color: C.gold,
-  fontWeight: '600',
-};
-
 // ── Mini icônes ───────────────────────────────────────────────────────────────
 const BackIcon = ({ size = 16, color = C.text }) => (
   <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
@@ -119,6 +88,19 @@ const MailIcon = ({ size = 14, color = C.textMuted }) => (
   <View style={{ width: size, height: size * 0.75, borderWidth: 1.5, borderColor: color, borderRadius: 2, justifyContent: 'flex-start', overflow: 'hidden' }}>
     <View style={{ width: size * 0.7, height: 1.5, backgroundColor: color, transform: [{ rotate: '30deg' }], marginLeft: -2, marginTop: 2 }} />
     <View style={{ width: size * 0.7, height: 1.5, backgroundColor: color, transform: [{ rotate: '-30deg' }], marginLeft: size * 0.3, marginTop: -1 }} />
+  </View>
+);
+
+const TradeIcon = ({ size = 16, color = C.gold }) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <View style={{ width: size * 0.55, height: 1.5, backgroundColor: color }} />
+      <View style={{ width: 0, height: 0, borderTopWidth: 4, borderBottomWidth: 4, borderLeftWidth: 5, borderTopColor: 'transparent', borderBottomColor: 'transparent', borderLeftColor: color }} />
+    </View>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <View style={{ width: 0, height: 0, borderTopWidth: 4, borderBottomWidth: 4, borderRightWidth: 5, borderTopColor: 'transparent', borderBottomColor: 'transparent', borderRightColor: color }} />
+      <View style={{ width: size * 0.55, height: 1.5, backgroundColor: color }} />
+    </View>
   </View>
 );
 
@@ -222,16 +204,6 @@ export default function ProfileScreen() {
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
       {/* ── HEADER ── */}
-      <View style={styles.header}>
-        <View style={styles.headerTopLine} />
-        <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
-            <BackIcon size={16} color={C.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Profil</Text>
-          <View style={{ width: 36 }} />
-        </View>
-      </View>
 
       <ScrollView
         style={styles.scroll}
@@ -293,15 +265,23 @@ export default function ProfileScreen() {
               />
             </View>
             <TouchableOpacity
-              style={artifactsBtn}
+              style={styles.artifactsBtn}
               onPress={() => router.push('/artifacts')}
               activeOpacity={0.8}
             >
-              <View style={artifactsBtnLeft}>
+              <View style={styles.artifactsBtnLeft}>
                 <GemIcon size={15} color={C.gold} />
-                <Text style={artifactsBtnText}>Mes artefacts</Text>
+                <Text style={styles.artifactsBtnText}>Mes artefacts</Text>
               </View>
-              <Text style={artifactsBtnChevron}>›</Text>
+              <Text style={styles.artifactsBtnChevron}>›</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.artifactsBtn} onPress={() => router.push('/trades')}>
+              <View style={styles.artifactsBtnLeft}>
+                <TradeIcon size={15} color={C.gold} />
+                <Text style={styles.artifactsBtnText}>Mes trades</Text>
+              </View>
+              <Text style={styles.artifactsBtnChevron}>›</Text>
             </TouchableOpacity>
 
             {/* ── BADGES ── */}
@@ -509,6 +489,35 @@ const styles = StyleSheet.create({
   skeleton: {
     height: 16, backgroundColor: C.surface,
     borderRadius: 8, alignSelf: 'center',
+  },
+
+  artifactsBtn: {
+    marginHorizontal: 16,
+    marginBottom: 24,
+    backgroundColor: C.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: C.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  artifactsBtnLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  artifactsBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: C.text,
+    letterSpacing: 0.2,
+  },
+  artifactsBtnChevron: {
+    fontSize: 20,
+    color: C.gold,
+    fontWeight: '600',
   },
 
   // Empty

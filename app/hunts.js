@@ -1,17 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
   FlatList,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 // ── Palette ──────────────────────────────────────────────────────────────────
@@ -426,17 +425,6 @@ export default function HuntsScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          title: "Lootopia - Chasses",
-          headerStyle: {
-            backgroundColor: C.surface,
-          },
-          headerTintColor: C.text,
-        }}
-      />
-      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
       {/* ── HEADER ── */}
       <Animated.View style={[styles.header, { opacity: headerFade }]}>

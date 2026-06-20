@@ -3,16 +3,15 @@ import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
-    Alert,
-    Animated,
-    FlatList,
-    Image,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Animated,
+  FlatList,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
@@ -276,33 +275,6 @@ export default function ArtifactsScreen() {
 
       {/* ── HEADER ── */}
       <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <View style={styles.headerTopLine} />
-        <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
-            <BackIcon size={16} color={C.text} />
-          </TouchableOpacity>
-
-          <View style={styles.headerCenter}>
-            <GemIcon size={16} color={C.gold} />
-            <Text style={styles.headerTitle}>Artefacts</Text>
-          </View>
-
-          {/* Toggle vue grille / liste */}
-          <View style={styles.layoutToggle}>
-            <TouchableOpacity
-              style={[styles.toggleBtn, layout === 'grid' && styles.toggleBtnActive]}
-              onPress={() => setLayout('grid')}
-            >
-              <GridIcon size={14} color={layout === 'grid' ? C.gold : C.textMuted} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.toggleBtn, layout === 'list' && styles.toggleBtnActive]}
-              onPress={() => setLayout('list')}
-            >
-              <ListIcon size={14} color={layout === 'list' ? C.gold : C.textMuted} />
-            </TouchableOpacity>
-          </View>
-        </View>
 
         {/* Stats rapides */}
         {!loading && artifacts.length > 0 && (
