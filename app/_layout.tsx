@@ -1,53 +1,58 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import 'react-native-reanimated';
 
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
-  anchor: "(tabs)",
+  anchor: '(tabs)',
 };
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: "#1A1710" },
-          headerTintColor: "#C9A84C",
+          // Style global appliqué à tous les headers natifs
+          headerStyle: { backgroundColor: '#1A1710' },
+          headerTintColor: '#C9A84C',          // couleur du bouton retour + titre
           headerTitleStyle: {
-            color: "#EDE8D8",
-            fontWeight: "700",
+            color: '#EDE8D8',
+            fontWeight: '700',
             fontSize: 16,
           },
-          headerBackTitle: "",
+          headerBackTitle: '',                  // pas de libellé sur le bouton retour iOS
           headerShadowVisible: false,
+          // Ligne dorée sous le header natif
+          headerBottomContainerStyle: {
+            borderBottomWidth: 2,
+            borderBottomColor: '#C9A84C',
+          },
         }}
       >
-        <Stack.Screen name="login" options={{ headerShown: false }} />
+        {/* ── Onglets principaux ── */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
+        <Stack.Screen name="modal"  options={{ presentation: 'modal', title: 'Modal' }} />
 
-        {/* hunts.js — header custom intégré dans le fichier, on masque le natif */}
-        <Stack.Screen name="hunts" options={{ headerShown: false }} />
+        {/* ── Écrans avec header CUSTOM intégré (headerShown: false) ── */}
+        <Stack.Screen name="hunts"       options={{ headerShown: false }} />
+        <Stack.Screen name="profile"     options={{ title: 'Profil' }} />
+        <Stack.Screen name="leaderboard" options={{ title: 'Classement' }} />
+        <Stack.Screen name="artifacts"   options={{ title: 'Artefacts' }} />
 
-        {/* [id].js — header natif activé, le titre vient de Stack.Screen dans [id].js */}
-        <Stack.Screen name="[id]" options={{ title: "Chasse" }} />
-        <Stack.Screen name="artifacts" options={{ title: "artefacts"}} />
-        <Stack.Screen name="hunt/[id]"  options={{ title: 'Chasse' }} />
-        <Stack.Screen name="trade/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="trades"     options={{ headerShown: false }} />
-        <Stack.Screen name="trade-new"  options={{ headerShown: false }} />
+        {/* ── Écrans avec header NATIF (titre dynamique via Stack.Screen) ── */}
+
+        {/* Détail chasse — titre passé en param depuis hunts.js */}
+        <Stack.Screen name="hunt/[id]" options={{ title: 'Chasse' }} />
+
+        {/* Trades — header natif doré, bouton retour automatique */}
+        <Stack.Screen name="trades"     options={{ title: 'Trades' }} />
+        <Stack.Screen name="trade-new"  options={{ title: 'Nouveau trade' }} />
+        <Stack.Screen name="trade/[id]" options={{ title: 'Détail du trade' }} />
+
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

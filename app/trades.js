@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
@@ -147,6 +147,7 @@ function TradeCard({ item, mode, index, onPress }) {
 
   return (
     <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+      
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
         <View style={styles.tradeCard}>
           <View style={[styles.tradeAccent, { backgroundColor: status.color }]} />
@@ -302,78 +303,76 @@ export default function TradesScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
-
-      {/* ── HEADER ── */}
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <View style={styles.headerTopLine} />
-        <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
-            <BackIcon size={16} color={C.text} />
-          </TouchableOpacity>
-          <View style={styles.headerCenter}>
-            <TradeIcon size={16} color={C.gold} />
-            <Text style={styles.headerTitle}>Trades</Text>
-            {/* Indicateur enrichissement discret */}
-            {enriching && (
-              <View style={styles.enrichingDot} />
-            )}
-          </View>
-          <TouchableOpacity style={styles.newTradeBtn} onPress={() => router.push('/trade-new')}>
-            <PlusIcon size={12} color={C.bg} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Onglets */}
-        <View style={styles.tabRow}>
-          {[
-            { key: 'received', label: 'Reçus', badge: pendingReceived },
-            { key: 'sent',     label: 'Envoyés' },
-          ].map(t => (
+    <>
+      <Stack.Screen
+        options={{
+          title: 'Trades',
+          headerRight: () => (
             <TouchableOpacity
-              key={t.key}
-              style={[styles.tab, tab === t.key && styles.tabActive]}
-              onPress={() => setTab(t.key)}
+              style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: C.gold, alignItems: 'center', justifyContent: 'center', marginRight: 4 }}
+              onPress={() => router.push('/trade-new')}
             >
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                <Text style={[styles.tabText, tab === t.key && styles.tabTextActive]}>{t.label}</Text>
-                {t.badge > 0 && (
-                  <View style={styles.tabBadge}>
-                    <Text style={styles.tabBadgeText}>{t.badge}</Text>
-                  </View>
-                )}
-              </View>
-              {tab === t.key && <View style={styles.tabUnderline} />}
+              <PlusIcon size={12} color={C.bg} />
             </TouchableOpacity>
-          ))}
-        </View>
+          ),
+        }}
+      />
+      <SafeAreaView style={styles.safe}>
+        <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
-        {!loading && currentList.length > 0 && (
-          <View style={styles.countRow}>
-            <Text style={styles.countText}>
-              {currentList.length} trade{currentList.length > 1 ? 's' : ''}
-            </Text>
+        {/* ── HEADER ── */}
+        <Animated.View style={[styles.header, { opacity: headerFade }]}>
+
+          {/* Onglets */}
+          <View style={styles.tabRow}>
+            {[
+              { key: 'received', label: 'Reçus', badge: pendingReceived },
+              { key: 'sent',     label: 'Envoyés' },
+            ].map(t => (
+              <TouchableOpacity
+                key={t.key}
+                style={[styles.tab, tab === t.key && styles.tabActive]}
+                onPress={() => setTab(t.key)}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Text style={[styles.tabText, tab === t.key && styles.tabTextActive]}>{t.label}</Text>
+                  {t.badge > 0 && (
+                    <View style={styles.tabBadge}>
+                      <Text style={styles.tabBadgeText}>{t.badge}</Text>
+                    </View>
+                  )}
+                </View>
+                {tab === t.key && <View style={styles.tabUnderline} />}
+              </TouchableOpacity>
+            ))}
           </View>
-        )}
-      </Animated.View>
 
-      {/* ── LISTE ── */}
-      {loading ? (
-        <LoadingSkeleton />
-      ) : (
-        <FlatList
-          key={tab}
-          data={currentList}
-          keyExtractor={item => item.id.toString()}
-          renderItem={renderItem}
-          ListEmptyComponent={ListEmpty}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        />
-      )}
-    </SafeAreaView>
+          {!loading && currentList.length > 0 && (
+            <View style={styles.countRow}>
+              <Text style={styles.countText}>
+                {currentList.length} trade{currentList.length > 1 ? 's' : ''}
+              </Text>
+            </View>
+          )}
+        </Animated.View>
+
+        {/* ── LISTE ── */}
+        {loading ? (
+          <LoadingSkeleton />
+        ) : (
+          <FlatList
+            key={tab}
+            data={currentList}
+            keyExtractor={item => item.id.toString()}
+            renderItem={renderItem}
+            ListEmptyComponent={ListEmpty}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          />
+        )}
+      </SafeAreaView>
+    </>
   );
 }
 

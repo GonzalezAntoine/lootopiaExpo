@@ -1,18 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
   Alert,
   Animated,
-  StatusBar,
+  FlatList,
   SafeAreaView,
-  TouchableOpacity,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
 
 // ── Palette ───────────────────────────────────────────────────────────────────
 const C = {
@@ -259,25 +258,6 @@ export default function LeaderboardScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
-
-      {/* ── HEADER ── */}
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <View style={styles.headerTopLine} />
-        <View style={styles.headerContent}>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
-            <BackIcon size={16} color={C.text} />
-          </TouchableOpacity>
-          <View style={styles.headerCenter}>
-            <TrophyIcon size={18} color={C.gold} />
-            <Text style={styles.headerTitle}>Classement</Text>
-          </View>
-          {players.length > 0 && (
-            <View style={styles.countBadge}>
-              <Text style={styles.countText}>{players.length}</Text>
-            </View>
-          )}
-        </View>
-      </Animated.View>
 
       {/* ── CONTENT ── */}
       {loading ? (

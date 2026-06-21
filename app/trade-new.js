@@ -3,19 +3,19 @@ import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Animated,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 const BASE_URL = 'https://lootopia-test.ordwen-dev.com';
@@ -329,16 +329,9 @@ export default function TradeNewScreen() {
         {/* ── HEADER ── */}
         <View style={styles.header}>
           <View style={styles.headerTopLine} />
-          <View style={styles.headerContent}>
-            <TouchableOpacity style={styles.iconBtn} onPress={() => step > 0 ? animateStep(step - 1) : router.back()}>
-              <BackIcon size={16} color={C.text} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Nouveau trade</Text>
-            <View style={{ width: 36 }} />
-          </View>
 
           {/* Indicateur étapes */}
-          <View style={{ paddingHorizontal: 20, paddingBottom: 14 }}>
+          <View style={{ paddingHorizontal: 20, paddingBottom: 14, paddingTop: 14 }}>
             <StepIndicator current={step} total={4} />
             <Text style={styles.stepLabel}>{STEP_LABELS[step]}</Text>
           </View>
