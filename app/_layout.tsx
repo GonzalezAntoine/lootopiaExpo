@@ -53,6 +53,11 @@ export default function RootLayout() {
         <Stack.Screen name="trade-new"  options={{ title: 'Nouveau trade' }} />
         <Stack.Screen name="trade/[id]" options={{ title: 'Détail du trade' }} />
 
+        {/* Annonces — header natif doré, bouton retour automatique */}
+        <Stack.Screen name="listings"      options={{ title: 'Annonces' }} />
+        <Stack.Screen name="listing-new"   options={{ title: 'Nouvelle annonce' }} />
+        <Stack.Screen name="listing/[id]"  options={{ title: 'Détail de l\'annonce' }} />
+
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

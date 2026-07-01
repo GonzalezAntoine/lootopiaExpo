@@ -104,6 +104,20 @@ const TradeIcon = ({ size = 16, color = C.gold }) => (
   </View>
 );
 
+const GavelIcon = ({ size = 16, color = C.gold }) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ width: size * 0.6, height: size * 0.15, backgroundColor: color, borderRadius: 1, transform: [{ rotate: '-45deg' }], position: 'absolute', top: size * 0.15 }} />
+    <View style={{ width: size * 0.12, height: size * 0.55, backgroundColor: color, borderRadius: 1, position: 'absolute', bottom: size * 0.12 }} />
+  </View>
+);
+
+const TagIcon = ({ size = 16, color = C.gold }) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ width: size * 0.7, height: size * 0.5, borderRadius: 3, borderWidth: 1.5, borderColor: color }} />
+    <View style={{ width: size * 0.35, height: size * 0.35, borderRadius: size * 0.175, backgroundColor: color, position: 'absolute', top: size * 0.1 }} />
+  </View>
+);
+
 // ── Stat card ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, label, value, accent }) {
   return (
@@ -280,6 +294,22 @@ export default function ProfileScreen() {
               <View style={styles.artifactsBtnLeft}>
                 <TradeIcon size={15} color={C.gold} />
                 <Text style={styles.artifactsBtnText}>Mes trades</Text>
+              </View>
+              <Text style={styles.artifactsBtnChevron}>›</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.artifactsBtn} onPress={() => router.push('/auctions')}>
+              <View style={styles.artifactsBtnLeft}>
+                <GavelIcon size={15} color={C.gold} />
+                <Text style={styles.artifactsBtnText}>Enchères</Text>
+              </View>
+              <Text style={styles.artifactsBtnChevron}>›</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.artifactsBtn} onPress={() => router.push('/listings')}>
+              <View style={styles.artifactsBtnLeft}>
+                <TagIcon size={15} color={C.gold} />
+                <Text style={styles.artifactsBtnText}>Annonces</Text>
               </View>
               <Text style={styles.artifactsBtnChevron}>›</Text>
             </TouchableOpacity>

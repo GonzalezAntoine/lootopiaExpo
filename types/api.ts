@@ -1,15 +1,18 @@
 export interface User {
   id: number;
   username: string;
-  firstname: string;
-  lastname: string;
-  mailAddress: string;
+  firstname?: string;
+  lastname?: string;
+  mailAddress?: string;
   crowns: number;
   completedHuntsCount: number;
   participantBadges?: ParticipantBadge[];
+  '@id'?: string;
+  iri?: string;
 }
 
 export interface ParticipantBadge {
+  id: number;
   badge: Badge;
 }
 
@@ -23,7 +26,16 @@ export interface Hunt {
   id: number;
   title: string;
   description?: string;
-  createdAt: string;
+  organizer?: User;
+  participants?: User[];
+  rewards?: HuntReward[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface HuntReward {
+  id: number;
+  crownAmount: number;
 }
 
 export interface Artifact {
@@ -31,8 +43,7 @@ export interface Artifact {
   name: string;
   description?: string;
   imagePath?: string;
-  createdAt: string;
-  quantity: number;
+  createdAt?: string;
 }
 
 export interface ArtifactItem {
@@ -44,18 +55,25 @@ export interface ArtifactItem {
 export interface Trade {
   id: number;
   status: TradeStatus;
-  createdAt: string;
-  resolvedAt?: string;
   message?: string;
   offeredQuantity: number;
   requestedQuantity: number;
-  sender: string | User;
-  receiver: string | User;
-  offeredArtifact: string | Artifact;
-  requestedArtifact: string | Artifact;
+  createdAt: string;
+  resolvedAt?: string;
+  sender: User | string;
+  receiver: User | string;
+  offeredArtifact: Artifact | string;
+  requestedArtifact: Artifact | string;
 }
 
 export type TradeStatus = 'pending' | 'accepted' | 'declined' | 'cancelled';
+
+export interface EnrichedTrade extends Trade {
+  sender: User;
+  receiver: User;
+  offeredArtifact: Artifact;
+  requestedArtifact: Artifact;
+}
 
 export interface LeaderboardPlayer {
   id: number;
@@ -70,6 +88,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  token: string;
+  '2fa_required'?: boolean;
+}
+
+export interface TwoFactorResponse {
   token: string;
 }
 
@@ -88,7 +111,45 @@ export interface SearchArtifactResult {
   initials?: string;
 }
 
+export interface CreateTradeRequest {
+  receiverId: number;
+  offeredArtifactId: number;
+  offeredQuantity: number;
+  requestedArtifactId: number;
+  requestedQuantity: number;
+  message?: string;
+}
+
 export interface ApiError {
   message: string;
   statusCode?: number;
+}
+
+export interface Auction {
+  id: number;
+  seller: { id: number; username: string };
+  artifact: { id: number; name: string; imagePath?: string };
+  quantity: number;
+  startingPrice: number;
+  currentHighestBid: number;
+  currentBidder: { id: number; username: string } | null;
+  endAt: string;
+  status: AuctionStatus;
+  createdAt: string;
+  resolvedAt?: string;
+  bidCount: number;
+  minNextBidAmount: number;
+}
+
+export type AuctionStatus = 'active' | 'ended' | 'cancelled';
+
+export interface CreateAuctionRequest {
+  artifactId: number;
+  quantity: number;
+  startingPrice: number;
+  endAt: string;
+}
+
+export interface PlaceBidRequest {
+  amount: number;
 }
