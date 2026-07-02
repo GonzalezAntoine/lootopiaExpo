@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Stack, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Alert,
   Animated,
@@ -213,6 +214,7 @@ function TradeCard({ item, mode, index, onPress }) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function TradesScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [allTrades, setAllTrades] = useState([]);
   const [meUrl, setMeUrl] = useState(null);
   const [tab, setTab] = useState('received');
@@ -306,22 +308,31 @@ export default function TradesScreen() {
     <>
       <Stack.Screen
         options={{
-          title: 'Trades',
-          headerRight: () => (
-            <TouchableOpacity
-              style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: C.gold, alignItems: 'center', justifyContent: 'center', marginRight: 4 }}
-              onPress={() => router.push('/trade-new')}
-            >
-              <PlusIcon size={12} color={C.bg} />
-            </TouchableOpacity>
-          ),
+          headerShown: false,
         }}
       />
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={[styles.safe, { paddingTop: insets.top }]}>
         <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
         {/* ── HEADER ── */}
         <Animated.View style={[styles.header, { opacity: headerFade }]}>
+
+          {/* Top bar */}
+          <View style={styles.topBar}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.topBarBtn} activeOpacity={0.7}>
+              <BackIcon size={16} color={C.text} />
+            </TouchableOpacity>
+            <View style={styles.topBarCenter}>
+              <Text style={styles.topBarTitle}>Trades</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.topBarBtnGold}
+              onPress={() => router.push('/trade-new')}
+              activeOpacity={0.7}
+            >
+              <PlusIcon size={12} color={C.bg} />
+            </TouchableOpacity>
+          </View>
 
           {/* Onglets */}
           <View style={styles.tabRow}>
@@ -381,6 +392,11 @@ const styles = StyleSheet.create({
 
   header: { backgroundColor: C.surface, borderBottomWidth: 1, borderBottomColor: C.border },
   headerTopLine: { height: 2, backgroundColor: C.gold, opacity: 0.6 },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, paddingVertical: 10 },
+  topBarBtn: { width: 36, height: 36, borderRadius: 8, backgroundColor: C.surfaceAlt, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' },
+  topBarBtnGold: { width: 36, height: 36, borderRadius: 8, backgroundColor: C.gold, alignItems: 'center', justifyContent: 'center' },
+  topBarCenter: { flex: 1, alignItems: 'center' },
+  topBarTitle: { fontSize: 15, fontWeight: '700', color: C.gold, letterSpacing: 2, textTransform: 'uppercase', fontFamily: 'monospace' },
   headerContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 14 },
   headerCenter: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   headerTitle: { fontSize: 17, fontWeight: '700', color: C.text, letterSpacing: 0.5 },

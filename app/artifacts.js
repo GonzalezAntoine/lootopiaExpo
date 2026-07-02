@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Alert,
   Animated,
@@ -11,6 +12,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -220,6 +222,7 @@ function ArtifactGridCard({ item, index }) {
 // ── Main Screen ───────────────────────────────────────────────────────────────
 export default function ArtifactsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [artifacts, setArtifacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [layout, setLayout] = useState('grid'); // 'grid' | 'list'
@@ -270,11 +273,37 @@ export default function ArtifactsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <SafeAreaView style={[styles.safe, { paddingTop: insets.top }]}>
+        <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
-      {/* ── HEADER ── */}
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
+        {/* ── HEADER ── */}
+        <Animated.View style={[styles.header, { opacity: headerFade }]}>
+          <View style={styles.topBar}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.topBarBtn} activeOpacity={0.7}>
+              <Text style={styles.topBarBack}>‹</Text>
+            </TouchableOpacity>
+            <View style={styles.topBarCenter}>
+              <Text style={styles.topBarTitle}>Artefacts</Text>
+            </View>
+            <View style={styles.layoutToggle}>
+              <TouchableOpacity
+                style={[styles.toggleBtn, layout === 'grid' && styles.toggleBtnActive]}
+                onPress={() => setLayout('grid')}
+                activeOpacity={0.7}
+              >
+                <GridIcon size={14} color={layout === 'grid' ? C.gold : C.textMuted} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.toggleBtn, layout === 'list' && styles.toggleBtnActive]}
+                onPress={() => setLayout('list')}
+                activeOpacity={0.7}
+              >
+                <ListIcon size={14} color={layout === 'list' ? C.gold : C.textMuted} />
+              </TouchableOpacity>
+            </View>
+          </View>
 
         {/* Stats rapides */}
         {!loading && artifacts.length > 0 && (
@@ -322,6 +351,7 @@ export default function ArtifactsScreen() {
         </Animated.View>
       )}
     </SafeAreaView>
+    </>
   );
 }
 
@@ -332,6 +362,11 @@ const styles = StyleSheet.create({
   // Header
   header: { backgroundColor: C.surface, borderBottomWidth: 1, borderBottomColor: C.border },
   headerTopLine: { height: 2, backgroundColor: C.gold, opacity: 0.6 },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, paddingVertical: 10 },
+  topBarBtn: { width: 36, height: 36, borderRadius: 8, backgroundColor: C.surfaceAlt, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' },
+  topBarCenter: { flex: 1, alignItems: 'center' },
+  topBarTitle: { fontSize: 15, fontWeight: '700', color: C.gold, letterSpacing: 2, textTransform: 'uppercase', fontFamily: 'monospace' },
+  topBarBack: { fontSize: 20, color: C.text, fontWeight: '300', marginTop: -2 },
   headerContent: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 14 },
   headerCenter: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   headerTitle: { fontSize: 17, fontWeight: '700', color: C.text, letterSpacing: 0.5 },

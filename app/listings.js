@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Stack, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Alert,
   Animated,
@@ -22,12 +23,12 @@ const { width: SCREEN_W } = Dimensions.get('window');
 const CARD_W = (SCREEN_W - 48) / 2;
 
 const C = {
-  bg: '#0A0906',
+  bg: '#0E0C09',
   bgDeep: '#060503',
-  surface: '#151209',
-  surfaceAlt: '#1C180E',
+  surface: '#1A1710',
+  surfaceAlt: '#211E14',
   surfaceLight: '#231E13',
-  border: '#2A2416',
+  border: '#2E2B1E',
   borderLight: '#3D3520',
   gold: '#C9A84C',
   goldLight: '#E8C96A',
@@ -261,6 +262,7 @@ const MemoizedListingCard = React.memo(ListingCard);
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function ListingsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [listings, setListings] = useState([]);
   const [filteredListings, setFilteredListings] = useState([]);
   const [page, setPage] = useState(1);
@@ -367,7 +369,7 @@ export default function ListingsScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={[styles.safe, { paddingTop: insets.top }]}>
         <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
         {/* Custom HDV Header */}

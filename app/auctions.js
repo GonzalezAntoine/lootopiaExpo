@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Stack, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Alert,
   Animated,
@@ -173,6 +174,7 @@ const MemoizedAuctionCard = React.memo(AuctionCard);
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function AuctionsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [auctions, setAuctions] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -244,21 +246,28 @@ export default function AuctionsScreen() {
     <>
       <Stack.Screen
         options={{
-          title: 'Enchères',
-          headerRight: () => (
-            <TouchableOpacity
-              style={{ width: 34, height: 34, borderRadius: 8, backgroundColor: C.gold, alignItems: 'center', justifyContent: 'center', marginRight: 4 }}
-              onPress={() => router.push('/auction-new')}
-            >
-              <PlusIcon size={12} color={C.bg} />
-            </TouchableOpacity>
-          ),
+          headerShown: false,
         }}
       />
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={[styles.safe, { paddingTop: insets.top }]}>
         <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
         <Animated.View style={[styles.header, { opacity: headerFade }]}>
+          <View style={styles.topBar}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.topBarBtn} activeOpacity={0.7}>
+              <Text style={styles.topBarBack}>‹</Text>
+            </TouchableOpacity>
+            <View style={styles.topBarCenter}>
+              <Text style={styles.topBarTitle}>Enchères</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.topBarBtnGold}
+              onPress={() => router.push('/auction-new')}
+              activeOpacity={0.7}
+            >
+              <PlusIcon size={12} color={C.bg} />
+            </TouchableOpacity>
+          </View>
           <View style={styles.headerTopLine} />
           {!loading && auctions.length > 0 && (
             <View style={styles.countRow}>
@@ -295,6 +304,12 @@ const styles = StyleSheet.create({
 
   header: { backgroundColor: C.surface, borderBottomWidth: 1, borderBottomColor: C.border },
   headerTopLine: { height: 2, backgroundColor: C.gold, opacity: 0.6 },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, paddingVertical: 10 },
+  topBarBtn: { width: 36, height: 36, borderRadius: 8, backgroundColor: C.surfaceAlt, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' },
+  topBarBtnGold: { width: 36, height: 36, borderRadius: 8, backgroundColor: C.gold, alignItems: 'center', justifyContent: 'center' },
+  topBarCenter: { flex: 1, alignItems: 'center' },
+  topBarTitle: { fontSize: 15, fontWeight: '700', color: C.gold, letterSpacing: 2, textTransform: 'uppercase', fontFamily: 'monospace' },
+  topBarBack: { fontSize: 20, color: C.text, fontWeight: '300', marginTop: -2 },
 
   countRow: { paddingHorizontal: 20, paddingVertical: 10 },
   countText: { fontSize: 11, color: C.textFaint, fontFamily: 'monospace', letterSpacing: 1, textTransform: 'uppercase' },

@@ -14,13 +14,6 @@ import {
   View,
 } from 'react-native';
 
-const GemIcon = ({ size = 16, color = C.gold }) => (
-  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-    <View style={{ width: 0, height: 0, borderLeftWidth: size * 0.4, borderRightWidth: size * 0.4, borderBottomWidth: size * 0.35, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: color, position: 'absolute', top: size * 0.05 }} />
-    <View style={{ width: 0, height: 0, borderLeftWidth: size * 0.4, borderRightWidth: size * 0.4, borderTopWidth: size * 0.5, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderTopColor: color, position: 'absolute', bottom: size * 0.05, opacity: 0.75 }} />
-  </View>
-);
-
 // ── Palette (même que HuntsScreen) ───────────────────────────────────────────
 const C = {
   bg: '#0E0C09',
@@ -35,6 +28,13 @@ const C = {
   textFaint: '#504C3D',
   accent: '#5C8A5E',
 };
+
+const GemIcon = ({ size = 16, color = C.gold }) => (
+  <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ width: 0, height: 0, borderLeftWidth: size * 0.4, borderRightWidth: size * 0.4, borderBottomWidth: size * 0.35, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: color, position: 'absolute', top: size * 0.05 }} />
+    <View style={{ width: 0, height: 0, borderLeftWidth: size * 0.4, borderRightWidth: size * 0.4, borderTopWidth: size * 0.5, borderLeftColor: 'transparent', borderRightColor: 'transparent', borderTopColor: color, position: 'absolute', bottom: size * 0.05, opacity: 0.75 }} />
+  </View>
+);
 
 // ── Mini icônes ───────────────────────────────────────────────────────────────
 const BackIcon = ({ size = 16, color = C.text }) => (

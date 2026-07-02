@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Alert,
   Animated,
@@ -348,6 +349,7 @@ function HuntCard({ item, onPress, index }) {
 // ── Main Screen ───────────────────────────────────────────────────────────────
 export default function HuntsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [hunts, setHunts] = useState([]);
   const [mode, setMode] = useState("all");
   const [loading, setLoading] = useState(false);
@@ -429,7 +431,7 @@ export default function HuntsScreen() {
     <SafeAreaView style={styles.safe}>
 
       {/* ── HEADER ── */}
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
+      <Animated.View style={[styles.header, { opacity: headerFade, paddingTop: insets.top }]}>
         <View style={styles.headerTopLine} />
 
         <View style={styles.headerContent}>
@@ -533,7 +535,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 8 : 16,
     paddingBottom: 12,
   },
   headerLeft: { flexDirection: "row", alignItems: "center" },

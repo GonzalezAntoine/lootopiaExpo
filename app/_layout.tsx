@@ -6,7 +6,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: 'hunts',
 };
 
 export default function RootLayout() {
@@ -26,37 +26,31 @@ export default function RootLayout() {
           },
           headerBackTitle: '',                  // pas de libellé sur le bouton retour iOS
           headerShadowVisible: false,
-          // Ligne dorée sous le header natif
-          headerBottomContainerStyle: {
-            borderBottomWidth: 2,
-            borderBottomColor: '#C9A84C',
-          },
         }}
       >
         {/* ── Onglets principaux ── */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal"  options={{ presentation: 'modal', title: 'Modal' }} />
 
         {/* ── Écrans avec header CUSTOM intégré (headerShown: false) ── */}
         <Stack.Screen name="hunts"       options={{ headerShown: false }} />
         <Stack.Screen name="profile"     options={{ title: 'Profil' }} />
         <Stack.Screen name="leaderboard" options={{ title: 'Classement' }} />
-        <Stack.Screen name="artifacts"   options={{ title: 'Artefacts' }} />
+        <Stack.Screen name="artifacts"   options={{ headerShown: false }} />
 
-        {/* ── Écrans avec header NATIF (titre dynamique via Stack.Screen) ── */}
+        {/* ── Écrans avec header CUSTOM intégré (headerShown: false) ── */}
+        <Stack.Screen name="trades"       options={{ headerShown: false }} />
+        <Stack.Screen name="trade-new"    options={{ title: 'Nouveau trade' }} />
+        <Stack.Screen name="trade/[id]"   options={{ title: 'Détail du trade' }} />
 
-        {/* Détail chasse — titre passé en param depuis hunts.js */}
-        <Stack.Screen name="hunt/[id]" options={{ title: 'Chasse' }} />
-
-        {/* Trades — header natif doré, bouton retour automatique */}
-        <Stack.Screen name="trades"     options={{ title: 'Trades' }} />
-        <Stack.Screen name="trade-new"  options={{ title: 'Nouveau trade' }} />
-        <Stack.Screen name="trade/[id]" options={{ title: 'Détail du trade' }} />
-
-        {/* Annonces — header natif doré, bouton retour automatique */}
-        <Stack.Screen name="listings"      options={{ title: 'Annonces' }} />
+        <Stack.Screen name="listings"      options={{ headerShown: false }} />
         <Stack.Screen name="listing-new"   options={{ title: 'Nouvelle annonce' }} />
         <Stack.Screen name="listing/[id]"  options={{ title: 'Détail de l\'annonce' }} />
+
+        <Stack.Screen name="auctions"      options={{ headerShown: false }} />
+        <Stack.Screen name="auction-new"   options={{ title: 'Nouvelle enchère' }} />
+        <Stack.Screen name="auction/[id]"  options={{ title: 'Détail de l\'enchère' }} />
+
+        <Stack.Screen name="hunt/[id]" options={{ title: 'Chasse' }} />
 
       </Stack>
       <StatusBar style="auto" />
